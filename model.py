@@ -1,4 +1,3 @@
-
 from torch import nn
 from transformers import BertModel
 
@@ -13,14 +12,14 @@ class IntentModel(nn.Module):
         # task1: add necessary class variables as you wish.
 
         # task2: initilize the dropout and classify layers
-        self.dropout = nn.Dropout(...)
-        self.classify = Classifier(...)
+        self.dropout = nn.Dropout(p=0.1) # Some random value I put
+        self.classify = Classifier(args, target_size)
 
     def model_setup(self, args):
         print(f"Setting up {args.model} model")
 
         # task1: get a pretrained model of 'bert-base-uncased'
-        self.encoder = BertModel.from_pretrained(...)
+        self.encoder = BertModel.from_pretrained('bert-base-uncased')
 
         self.encoder.resize_token_embeddings(len(self.tokenizer))  # transformer_check
 
@@ -34,7 +33,17 @@ class IntentModel(nn.Module):
         task3:
             feed the output of the dropout layer to the Classifier which is provided for you.
         """
+        # Task 1:
+        outputs = self.encoder(**inputs)
 
+        # Task 2:
+        cls_output = outputs.last_hidden_state[:, 0]  # Extract <CLS> token
+        cls_output = self.dropout(cls_output)
+
+        # Task 3:
+        logits = self.classify(cls_output)
+
+        return logits
 
 class Classifier(nn.Module):
     def __init__(self, args, target_size):
