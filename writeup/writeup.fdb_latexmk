@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex writeup"] 1709410446 "writeup.aux" "writeup.bbl" "writeup" 1709410556
+["bibtex writeup"] 1709587822 "writeup.aux" "writeup.bbl" "writeup" 1709587824
   "/usr/local/texlive/2022/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
-  "references.bib" 1709410154 508 1e1e7ebbec0e7258266be167ab64adae ""
-  "writeup.aux" 1709410556 731 53dd5f73c6b5953e63a0b3d4cf1f9e69 "pdflatex"
+  "references.bib" 1709587730 883 d1531226db77f47f505318968f3123d6 ""
+  "writeup.aux" 1709587823 1042 b28c10a3d810a5dc4db9a5acd9a0c3f3 "pdflatex"
   (generated)
   "writeup.bbl"
   "writeup.blg"
-["pdflatex"] 1709410555 "writeup.tex" "writeup.pdf" "writeup" 1709410556
+["pdflatex"] 1709587822 "writeup.tex" "writeup.pdf" "writeup" 1709587824
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -122,10 +122,10 @@
   "sections/discussion.tex" 1709410280 264 8dd3c67eaea353e96489064ca1508b8c ""
   "sections/intro.tex" 1709410372 24 20e4f994b35c9cd8a7f21dc4ba79a69e ""
   "sections/methods.tex" 1709410417 446 6f034491d0ef85a56e1bc90763775e32 ""
-  "sections/related.tex" 1709410444 97 570db3d1e17237658bdd4412c886e285 ""
+  "sections/related.tex" 1709587820 1948 37c58b93f3794d209ea19b0c52e699cb ""
   "sections/results.tex" 1709410268 434 b12b03613b1f196a94175dd489ca2a58 ""
-  "writeup.aux" 1709410556 731 53dd5f73c6b5953e63a0b3d4cf1f9e69 "pdflatex"
-  "writeup.bbl" 1709410446 275 de5ffaf5b665b622658d80bed97ba2a5 "bibtex writeup"
+  "writeup.aux" 1709587823 1042 b28c10a3d810a5dc4db9a5acd9a0c3f3 "pdflatex"
+  "writeup.bbl" 1709587822 976 5b4db44f26e928e731962aa699a9fb6b "bibtex writeup"
   "writeup.out" 0 -1 0 "pdflatex"
   "writeup.tex" 1709410555 1758 1f73af11a47b1e3088cd689f74c1793f ""
   (generated)
