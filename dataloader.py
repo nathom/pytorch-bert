@@ -5,8 +5,6 @@ import torch
 from torch.utils.data import DataLoader, Dataset, RandomSampler, SequentialSampler
 from tqdm import tqdm as progress_bar
 
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
 
 def get_dataloader(args, dataset, split="train"):
     sampler = RandomSampler(dataset) if split == "train" else SequentialSampler(dataset)
@@ -20,7 +18,7 @@ def get_dataloader(args, dataset, split="train"):
     return dataloader
 
 
-def prepare_inputs(batch, model, use_text=False):
+def prepare_inputs(batch, model, use_text=False, device=torch.device("cpu")):
     """
     This function converts the batch of variables to input_ids, token_type_ids and attention_mask which the
     BERT encoder requires. It also separates the targets (ground truth labels) for supervised-loss.
@@ -59,7 +57,12 @@ def prepare_features(args, data, tokenizer, cache_path):
         # task1: process examples using tokenizer. Wrap it using BaseInstance class and append it to feats list.
         for example in progress_bar(examples, total=len(examples)):
             # tokenizer: set padding to 'max_length', set truncation to True, set max_length to args.max_len
-            embed_data = tokenizer(example['text'], padding='max_length', truncation=True, max_length=args.max_len)
+            embed_data = tokenizer(
+                example["text"],
+                padding="max_length",
+                truncation=True,
+                max_length=args.max_len,
+            )
 
             instance = BaseInstance(embed_data, example)
             feats.append(instance)

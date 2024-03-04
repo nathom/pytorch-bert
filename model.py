@@ -12,18 +12,18 @@ class IntentModel(nn.Module):
         # task1: add necessary class variables as you wish.
 
         # task2: initilize the dropout and classify layers
-        self.dropout = nn.Dropout(p=0.1) # Some random value I put
+        self.dropout = nn.Dropout(p=0.1)  # Some random value I put
         self.classify = Classifier(args, target_size)
 
     def model_setup(self, args):
         print(f"Setting up {args.model} model")
 
         # task1: get a pretrained model of 'bert-base-uncased'
-        self.encoder = BertModel.from_pretrained('bert-base-uncased')
+        self.encoder = BertModel.from_pretrained("bert-base-uncased")
 
         self.encoder.resize_token_embeddings(len(self.tokenizer))  # transformer_check
 
-    def forward(self, inputs, targets):
+    def forward(self, inputs, labels):
         """
         task1:
             feeding the input to the encoder,
@@ -45,6 +45,7 @@ class IntentModel(nn.Module):
 
         return logits
 
+
 class Classifier(nn.Module):
     def __init__(self, args, target_size):
         super().__init__()
@@ -59,9 +60,40 @@ class Classifier(nn.Module):
         return logit
 
 
-class CustomModel(IntentModel):
+class CustomModel(nn.Module):
     def __init__(self, args, tokenizer, target_size):
-        super().__init__(args, tokenizer, target_size)
+        super().__init__()
+        self.tokenizer = tokenizer
+        self.encoder = BertModel.from_pretrained("bert-base-uncased")
+        self.encoder.resize_token_embeddings(len(self.tokenizer))  # transformer_check
+        self.target_size = target_size
+
+        # task1: add necessary class variables as you wish.
+
+        # task2: initilize the dropout and classify layers
+        self.dropout = nn.Dropout(p=0.1)  # Some random value I put
+        self.fc = nn.Linear(self.encoder.config.hidden_size, target_size)
+        self.softmax = nn.Softmax()
+
+    def forward(self, inputs, labels):
+        """
+        task1:
+            feeding the input to the encoder,
+        task2:
+            take the last_hidden_state's <CLS> token as output of the
+            encoder, feed it to a drop_out layer with the preset dropout rate in the argparse argument,
+        task3:
+            feed the output of the dropout layer to the Classifier which is provided for you.
+        """
+        # Task 1:
+        out = self.encoder(**inputs)
+
+        # Task 2:
+        out = out.last_hidden_state[:, 0]  # Extract <CLS> token
+        out = self.dropout(out)
+        out = self.fc(out)
+        logits = self.softmax(out)
+        return logits
 
         # task1: use initialization for setting different strategies/techniques to better fine-tune the BERT model
 

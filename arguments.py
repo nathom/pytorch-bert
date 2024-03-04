@@ -92,7 +92,7 @@ def params():
     )
     parser.add_argument(
         "--embed-dim",
-        default=10,
+        default=768,
         type=int,
         help="The embedding dimension of pretrained LM.",
     )
@@ -104,6 +104,18 @@ def params():
         default=1,
         type=int,
         help="Total number of training epochs to perform.",
+    )
+    parser.add_argument(
+        "--step-size",
+        default=5,
+        type=int,
+        help="Number of epochs before lowering learning rate",
+    )
+    parser.add_argument(
+        "--gamma",
+        default=0.9,
+        type=float,
+        help="Gamma for step LR",
     )
     parser.add_argument(
         "--max-len", default=20, type=int, help="maximum sequence length to look back"
