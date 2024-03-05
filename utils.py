@@ -62,6 +62,7 @@ def plot_stuff(args, plots1, name1, plots2, name2, plot_type='Loss'):
     plt.legend()
 
     if args.task == "tune": path = "./writeup/plots/" + args.task + f"{args.technique}_" + str(args.n_epochs) + "_" + plot_type + ".png"
+    elif args.simclr: path = "./writeup/plots/" + args.task + "_sim_" + str(args.n_epochs) + "_" + plot_type + ".png"
     else: path = "./writeup/plots/" + args.task + "_" + str(args.n_epochs) + "_" + plot_type + ".png"
     plt.savefig(path)
     plt.clf()

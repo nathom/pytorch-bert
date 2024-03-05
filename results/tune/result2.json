@@ -1,5 +1,5 @@
 {
     "name": "tune_10",
-    "technique_2_acc": 0.02252858103564223,
-    "technique_2_loss": 774.8269703388214
+    "technique_1_acc": 0.8853396099529254,
+    "technique_1_loss": 122.9071667494718
 }
