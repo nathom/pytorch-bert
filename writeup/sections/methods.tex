@@ -4,7 +4,84 @@
 
 \subsection*{Baseline}
 
+\subsubsection*{Model Architecture}
+Our intent classification model is built upon the transformer architecture, utilizing the BERT (\textit{bert-base-uncased}) model as the encoder for input text representation. Specifically, our model, named \texttt{IntentModel}, leverages a pre-trained BERT model to encode textual inputs into a contextualized embedding space. The architecture is designed to be flexible, allowing for easy adaptation to different target sizes, which corresponds to the number of intent categories in the classification task.
+
+The model is initialized with a tokenizer responsible for converting text inputs into token embeddings, which are then passed through the BERT encoder. The encoder output, specifically the representation of the [CLS] token, is subsequently processed through a dropout layer with a predefined probability (0.1 in this implementation) to mitigate overfitting.
+
+\subsubsection*{Classifier}
+Following the dropout layer, the model employs a classification layer, named \texttt{Classifier}, to project the encoded representations into the target label space. The \texttt{Classifier} consists of a linear layer that maps the input dimension to an intermediate representation, followed by a ReLU activation function for non-linearity, and another linear layer that maps the intermediate representation to the target size, corresponding to the number of intent categories.
+
+\subsubsection*{Training Procedure}
+The training procedure involves several key steps, starting with the initialization of a cross-entropy loss function to compute the discrepancy between the predicted probabilities and the ground truth labels. We utilize an Adam optimizer for adjusting the model parameters based on the computed gradients.
+
+During training, the model iterates over batches of data, computing the forward pass, followed by the loss. The gradients are calculated via backpropagation, and the optimizer updates the model parameters accordingly. The accuracy and loss for both training and validation sets are tracked and reported for each epoch. Additionally, while not activated in the provided code, a learning rate scheduler can be integrated to adjust the learning rate during training, potentially improving convergence rates.
+
+Training is executed over a specified number of epochs, with performance evaluation on a validation set at the end of each epoch to monitor generalization capabilities. The implementation supports visualizing the training and validation accuracy and loss over epochs, aiding in the identification of overfitting or underfitting patterns.
+
+\subsubsection*{Evaluation}
+Model evaluation is conducted on a held-out test set or a validation set during the training process. The evaluation metrics include accuracy, which measures the proportion of correctly predicted intentions among the total number of samples.
+
+This intent classification framework demonstrates a straightforward application of transfer learning and fine-tuning BERT for a specific NLP task. By leveraging pre-trained models and adapting them to target tasks, we can achieve high performance with relatively minimal additional training.
+
+
 \subsection*{Custom}
 
-\subsection*{Contrastive}
+\subsubsection*{Training}
+
+In addition to the base \texttt{IntentModel}, we introduce a custom training procedure that incorporates advanced optimization techniques to further improve model performance. These techniques are selectively applied based on a specified \texttt{technique} parameter, enhancing the model's ability to adapt to the training data and potentially reduce overfitting.
+
+\subsubsection*{Optimization Techniques}
+
+\subsubsubsection*{Learning Rate Decay (LRD)}
+The first technique, applicable when the \texttt{technique} parameter is set to 1 or 3, involves the use of Learning Rate Decay (LRD) through the AdamW optimizer with weight decay regularization. This approach adjusts the learning rate over time, reducing it as the model progresses through the epochs. The implementation specifics are as follows:
+\begin{verbatim}
+    optimizer = torch.optim.AdamW(model.parameters(), 
+                                  lr=args.learning_rate, 
+                                  weight_decay=0.01)
+\end{verbatim}
+LRD helps in stabilizing the learning process and can lead to better generalization by mitigating the risk of overfitting.
+
+\subsubsubsection*{Scheduler for Learning Rate Adjustment}
+The second technique, activated when \texttt{technique} is 2 or 3, employs a scheduler to adjust the learning rate throughout training. Specifically, it utilizes a linear schedule with warmup, gradually increasing the learning rate from 0 to the specified maximum before linearly decreasing it:
+\begin{verbatim}
+    scheduler = get_linear_schedule_with_warmup(
+                    optimizer,
+                    num_warmup_steps=int(0.1 * total_steps),
+                    num_training_steps=total_steps,
+                )
+\end{verbatim}
+This method ensures a smoother and more controlled adjustment of the learning rate, promoting faster convergence and potentially improving final model performance.
+
+\subsubsection*{Training Procedure}
+The custom training procedure follows the standard steps of forward and backward passes, with modifications to incorporate the above techniques. At the beginning of each epoch, based on the selected technique, the optimizer's gradient buffers are cleared using \texttt{optimizer.zero\_grad()} for technique 1 or 3. After computing the loss and performing backpropagation, the learning rate scheduler is optionally updated if technique 2 or 3 is selected.
+
+The effectiveness of these techniques is monitored through accuracy and loss metrics, both on the training and validation datasets. These metrics are visualized over epochs, allowing for empirical analysis of the model's learning progress and the impact of the optimization techniques.
+
+\subsubsection*{Evaluation}
+Custom model evaluation is analogous to the base model, emphasizing the model's capability to accurately classify intents in unseen data. The incorporation of advanced optimization techniques aims to enhance this capability by refining the training process.
+
+\textbf{Note:} The custom model retains the architectural foundation of the \texttt{IntentModel}, with these techniques offering strategic adjustments to the training algorithm rather than altering the model structure.
+
+
+\subsection*{Supervised Contrastive Learning Model}
+
+The \texttt{SupConModel} represents a novel approach to intent classification by incorporating supervised contrastive learning, a technique that enhances model performance by learning representations that bring similar samples closer and push dissimilar ones apart in the embedding space.
+
+\subsubsection*{Model Architecture}
+The architecture of \texttt{SupConModel} is grounded on the BERT (\textit{bert-base-uncased}) transformer model for encoding input text into rich, contextual embeddings. It is equipped with a dropout layer to prevent overfitting and a fully connected (FC) layer that projects the encoded representations to the target classification space. Notably, the model includes a Batch Normalization layer applied to the encoded features before the final classification layer, ensuring a stable and efficient training process by normalizing the activations.
+
+\subsubsection*{Training Procedure}
+The training of \texttt{SupConModel} is conducted in two distinct phases to optimize the contrastive learning objectives and fine-tune the model for the classification task.
+
+\subsubsubsection{Phase 1: Contrastive Learning}
+In the initial phase, the model employs the Supervised Contrastive Loss (\texttt{SupConLoss}), which is designed to learn embeddings by maximizing the similarity between differently augmented views of the same data point relative to other data points. The optimizer used is AdamW with weight decay regularization, which is beneficial for contrastive learning settings. During this phase, each input is processed twice to generate two sets of logits, which are then concatenated and fed into the \texttt{SupConLoss} function. Depending on whether the SimCLR variant is activated, the loss computation either uses the embeddings directly or incorporates the target labels for a more supervised learning signal.
+
+\subsubsubsection{Phase 2: Fine-tuning for Classification}
+After the encoder has been trained to produce meaningful embeddings through contrastive learning, its parameters are frozen to preserve the learned representations. The model then transitions to a standard classification training regimen, utilizing Cross-Entropy Loss. The optimizer and learning rate scheduler from the first phase are reused, ensuring consistency in the optimization strategy. This phase focuses on refining the model's ability to accurately predict intent labels based on the embeddings generated by the now-static encoder.
+
+\subsubsection*{Evaluation}
+Model performance is assessed through accuracy and loss metrics across both training and validation datasets. Additionally, the effectiveness of the contrastive learning phase is indirectly evaluated by the improvements observed in the classification performance during the second phase of training. Visualization of training dynamics, including accuracy and loss trends over epochs, provides insight into the model's learning efficiency and generalization capabilities.
+
+\textbf{Note:} The \texttt{SupConModel} showcases the potential of integrating contrastive learning principles within the context of intent classification, aiming to set a new standard for model robustness and discriminative power.
 
