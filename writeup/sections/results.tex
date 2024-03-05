@@ -4,12 +4,40 @@ Summarize and document the results for all experiments (Baseline Model, Custom F
 
 (a) Include the table(s) (for the 6 experiments as indicated above with “exp idx”)
 
+\begin{table}[H]
+    \centering
+    \begin{tabular}{|c|l|l|l|}
+        \hline
+        Exp. Index & Experiment & Loss & Accuracy \\
+        \hline
+        1 & Test set before fine-tuning    && \\
+        \hline
+        2 & Test set after fine-tuning     && \\
+        \hline
+        3 & Test set with first technique  && \\
+        \hline
+        4 & Test set with second technique && \\
+        \hline
+        5 & Test set with two techniques   && \\
+        \hline
+        6 & Test set with SupContrast      && \\
+        \hline
+        7 & Test set with SimCLR           && \\
+        \hline
+    \end{tabular}
+    \vspace{2mm}
+    \caption{Experimental Results}
+    \label{tab:exp}
+\end{table}
+
 (b) Provide your training and validation accuracy in each plot for the following 5 models
 
 i. Baseline model
 
 ii. first fine-tuning technique
 
-iii. second fine-tuning technique iv. SupContrast
+iii. second fine-tuning technique 
+
+iv. SupContrast
 
 v. SimCLR
