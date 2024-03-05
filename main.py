@@ -13,7 +13,7 @@ from dataloader import (
 )
 from load import load_data, load_tokenizer
 from model import CustomModel, IntentModel, SupConModel
-from utils import check_directories, set_seed, setup_gpus
+from utils import check_directories, set_seed, setup_gpus, plot_stuff, compare_and_save
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -40,9 +40,13 @@ def baseline_train(args, model, datasets, tokenizer):
     model.optimizer = optimizer
     # model.scheduler = scheduler
 
+    # To hold the loss of each epoch.
+    train_acc_pts, train_loss_pts = [], []
+    valid_acc_pts, valid_loss_pts = [], []
+
     # task3: write a training loop
     for epoch_count in range(args.n_epochs):
-        losses = 0
+        acc, losses = 0, 0
         model.train()
 
         for step, batch in progress_bar(
@@ -55,16 +59,28 @@ def baseline_train(args, model, datasets, tokenizer):
             loss = criterion(logits, labels)
             loss.backward()
 
+            tem = (logits.argmax(1) == labels).float().sum()
+            acc += tem.item()
+
             model.optimizer.step()  # backprop to update the weights
-            # model.scheduler.step()  # Update learning rate schedule
-            model.zero_grad()
+            model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
-        run_eval(args, model, datasets, tokenizer, split="validation")
-        print("epoch", epoch_count, "| losses:", losses)
+        acc /= len(datasets['train'])
+        train_acc_pts.append(acc)
+        train_loss_pts.append(losses)
+
+        outs = run_eval(args, model, datasets, tokenizer, split="validation")
+        valid_acc_pts.append(outs[0])
+        valid_loss_pts.append(outs[1])
+
+        print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)
+    
+    plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
+    plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
 
-def custom_train(args, model, datasets, tokenizer):
+def custom_train(args, model, datasets, tokenizer, technique=1):
     criterion = nn.CrossEntropyLoss()  # combines LogSoftmax() and NLLLoss()
     epochs = args.n_epochs
     train_dataloader = get_dataloader(args, datasets["train"], split="train")
@@ -80,9 +96,13 @@ def custom_train(args, model, datasets, tokenizer):
     model.optimizer = optimizer
     model.scheduler = scheduler
 
+    # To hold the loss of each epoch.
+    train_acc_pts, train_loss_pts = [], []
+    valid_acc_pts, valid_loss_pts = [], []
+
     # task3: write a training loop
     for epoch_count in range(args.n_epochs):
-        losses = 0
+        acc, losses = 0, 0
         model.train()
 
         for step, batch in progress_bar(
@@ -97,23 +117,37 @@ def custom_train(args, model, datasets, tokenizer):
             loss.backward()
 
             model.optimizer.step()  # backprop to update the weights
-            model.scheduler.step()  # Update learning rate schedule
+            if technique == 3 or technique == 1: model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
-        run_eval(args, model, datasets, tokenizer, split="validation")
-        print("epoch", epoch_count, "| losses:", losses)
+        acc /= len(datasets['train'])
+        train_acc_pts.append(acc)
+        train_loss_pts.append(losses)
+
+        outs = run_eval(args, model, datasets, tokenizer, split="validation")
+        valid_acc_pts.append(outs[0])
+        valid_loss_pts.append(outs[1])
+
+        print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)
+    
+    plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
+    plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
 
 def run_eval(args, model, datasets, tokenizer, split="validation"):
     model.eval()
     dataloader = get_dataloader(args, datasets[split], split)
 
-    acc = 0
+    acc, losses = 0, 0
+    criterion = nn.CrossEntropyLoss()
     for step, batch in progress_bar(enumerate(dataloader), total=len(dataloader)):
         inputs, labels = prepare_inputs(batch, model, device=device)
         logits = model(inputs, labels)
         if len(logits.shape) == 3:
             logits = logits[:, 0, :].squeeze(1)
+
+        loss = criterion(logits, labels)
+        losses += loss.item()
 
         tem = (logits.argmax(1) == labels).float().sum()
         acc += tem.item()
@@ -124,6 +158,9 @@ def run_eval(args, model, datasets, tokenizer, split="validation"):
         f"|dataset split {split} size:",
         len(datasets[split]),
     )
+
+    # Return the accuracy and loss.
+    return (acc / len(datasets[split]), losses)
 
 
 def supcon_train(args, model, datasets, tokenizer):
@@ -218,17 +255,19 @@ if __name__ == "__main__":
     if args.task == "baseline":
         model = IntentModel(args, tokenizer, target_size=60).to(device)
         run_eval(args, model, datasets, tokenizer, split="validation")
-        run_eval(args, model, datasets, tokenizer, split="test")
+        org = run_eval(args, model, datasets, tokenizer, split="test")
         baseline_train(args, model, datasets, tokenizer)
-        run_eval(args, model, datasets, tokenizer, split="test")
+        fin = run_eval(args, model, datasets, tokenizer, split="test")
+        compare_and_save(args, [("before_test", org), ("after_test", fin)])
     elif (
-        args.task == "custom"
+        args.task == "tune"
     ):  # you can have multiple custom task for different techniques
         model = CustomModel(args, tokenizer, target_size=60).to(device)
         run_eval(args, model, datasets, tokenizer, split="validation")
         run_eval(args, model, datasets, tokenizer, split="test")
-        custom_train(args, model, datasets, tokenizer)
-        run_eval(args, model, datasets, tokenizer, split="test")
+        custom_train(args, model, datasets, tokenizer, technique=args.technique)
+        fin = run_eval(args, model, datasets, tokenizer, split="test")
+        compare_and_save(args, [(f"technique_{args.technique}", fin)])
     elif args.task == "supcon":
         model = SupConModel(args, tokenizer, target_size=60).to(device)
         supcon_train(args, model, datasets, tokenizer)

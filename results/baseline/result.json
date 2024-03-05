@@ -1,0 +1,7 @@
+{
+    "name": "baseline_10",
+    "before_test_acc": 0.009751176866173503,
+    "before_test_loss": 765.9041862487793,
+    "after_test_acc": 0.8584398117014123,
+    "after_test_loss": 167.609482425265
+}
