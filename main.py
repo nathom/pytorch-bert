@@ -1,6 +1,7 @@
 import torch
 from torch import nn
 from tqdm import tqdm as progress_bar
+from transformers import AdamW, get_linear_schedule_with_warmup
 
 from arguments import params
 from dataloader import (
@@ -65,11 +66,42 @@ def baseline_train(args, model, datasets, tokenizer):
 
 def custom_train(args, model, datasets, tokenizer):
     criterion = nn.CrossEntropyLoss()  # combines LogSoftmax() and NLLLoss()
-    # task1: setup train dataloader
+    epochs = args.n_epochs
+    train_dataloader = get_dataloader(args, datasets["train"], split="train")
 
     # task2: setup model's optimizer_scheduler if you have
+    optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    total_steps = len(train_dataloader) * epochs
+    scheduler = get_linear_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=int(0.1 * total_steps),
+        num_training_steps=total_steps,
+    )
+    model.optimizer = optimizer
+    model.scheduler = scheduler
 
     # task3: write a training loop
+    for epoch_count in range(args.n_epochs):
+        losses = 0
+        model.train()
+
+        for step, batch in progress_bar(
+            enumerate(train_dataloader), total=len(train_dataloader)
+        ):
+            inputs, labels = prepare_inputs(batch, model, device=device)
+            # inputs = {k: v.to(device) for k, v in inputs.items()}
+            # labels = labels.to(device)
+            optimizer.zero_grad()
+            logits = model(inputs, labels)
+            loss = criterion(logits, labels)
+            loss.backward()
+
+            model.optimizer.step()  # backprop to update the weights
+            model.scheduler.step()  # Update learning rate schedule
+            losses += loss.item()
+
+        run_eval(args, model, datasets, tokenizer, split="validation")
+        print("epoch", epoch_count, "| losses:", losses)
 
 
 def run_eval(args, model, datasets, tokenizer, split="validation"):
@@ -80,6 +112,8 @@ def run_eval(args, model, datasets, tokenizer, split="validation"):
     for step, batch in progress_bar(enumerate(dataloader), total=len(dataloader)):
         inputs, labels = prepare_inputs(batch, model, device=device)
         logits = model(inputs, labels)
+        if len(logits.shape) == 3:
+            logits = logits[:, 0, :].squeeze(1)
 
         tem = (logits.argmax(1) == labels).float().sum()
         acc += tem.item()
@@ -96,6 +130,64 @@ def supcon_train(args, model, datasets, tokenizer):
     from loss import SupConLoss
 
     criterion = SupConLoss(temperature=args.temperature)
+    epochs = args.n_epochs
+    train_dataloader = get_dataloader(args, datasets["train"], split="train")
+
+    # task2: setup model's optimizer_scheduler if you have
+    optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    total_steps = len(train_dataloader) * epochs
+    model.optimizer = optimizer
+    for epoch in range(args.n_epochs_first):
+        losses = 0
+        model.train()
+
+        for step, batch in progress_bar(
+            enumerate(train_dataloader), total=len(train_dataloader)
+        ):
+            inputs, labels = prepare_inputs(batch, model, device=device)
+            optimizer.zero_grad()
+            logits1 = model(inputs, labels)
+            logits2 = model(inputs, labels)
+            logits = torch.cat([logits1.unsqueeze(1), logits2.unsqueeze(1)], dim=1)
+            loss = criterion.forward(logits, labels, device=device)
+            loss.backward()
+
+            model.optimizer.step()  # backprop to update the weights
+            # model.scheduler.step()  # Update learning rate schedule
+            losses += loss.item()
+
+        run_eval(args, model, datasets, tokenizer, split="validation")
+        print("cse epoch", epoch, "| losses:", losses)
+
+    for param in model.encoder.parameters():
+        param.requires_grad = False
+
+    criterion = nn.CrossEntropyLoss()
+    model.optimizer = AdamW(
+        model.parameters(), lr=args.learning_rate, weight_decay=0.01
+    )
+    model.scheduler = get_linear_schedule_with_warmup(
+        optimizer,
+        num_warmup_steps=int(0.1 * total_steps),
+        num_training_steps=total_steps,
+    )
+    for epoch in range(args.n_epochs):
+        losses = 0
+        model.train()
+
+        for batch in progress_bar(train_dataloader):
+            inputs, labels = prepare_inputs(batch, model, device=device)
+            optimizer.zero_grad()
+            logits = model(inputs, labels)
+            loss = criterion.forward(logits, labels, device=device)
+            loss.backward()
+
+            model.optimizer.step()  # backprop to update the weights
+            model.scheduler.step()  # Update learning rate schedule
+            losses += loss.item()
+
+        run_eval(args, model, datasets, tokenizer, split="validation")
+        print("regular epoch", epoch, "| losses:", losses)
 
     # task1: load training split of the dataset
 

@@ -68,49 +68,41 @@ class CustomModel(nn.Module):
         self.encoder.resize_token_embeddings(len(self.tokenizer))  # transformer_check
         self.target_size = target_size
 
-        # task1: add necessary class variables as you wish.
-
-        # task2: initilize the dropout and classify layers
         self.dropout = nn.Dropout(p=0.1)  # Some random value I put
         self.fc = nn.Linear(self.encoder.config.hidden_size, target_size)
-        self.softmax = nn.Softmax()
+        # self.softmax = nn.Softmax()
 
     def forward(self, inputs, labels):
-        """
-        task1:
-            feeding the input to the encoder,
-        task2:
-            take the last_hidden_state's <CLS> token as output of the
-            encoder, feed it to a drop_out layer with the preset dropout rate in the argparse argument,
-        task3:
-            feed the output of the dropout layer to the Classifier which is provided for you.
-        """
-        # Task 1:
         out = self.encoder(**inputs)
-
-        # Task 2:
         out = out.last_hidden_state[:, 0]  # Extract <CLS> token
         out = self.dropout(out)
         out = self.fc(out)
-        logits = self.softmax(out)
-        return logits
+        # out = self.softmax(out)
+        return out
 
         # task1: use initialization for setting different strategies/techniques to better fine-tune the BERT model
 
 
-class SupConModel(IntentModel):
-    def __init__(self, args, tokenizer, target_size, feat_dim=768):
-        super().__init__(args, tokenizer, target_size)
+class SupConModel(nn.Module):
+    def __init__(self, args, tokenizer, target_size):
+        super().__init__()
+        self.tokenizer = tokenizer
+        self.encoder = BertModel.from_pretrained("bert-base-uncased")
+        self.encoder.resize_token_embeddings(len(self.tokenizer))  # transformer_check
+        self.target_size = target_size
 
-        # task1: initialize a linear head layer
+        self.dropout1 = nn.Dropout(p=0.1)  # Some random value I put
+        self.dropout2 = nn.Dropout(p=0.1)  # Some random value I put
+        hidden_size = self.encoder.config.hidden_size
+        self.norm = nn.BatchNorm1d(hidden_size)
+        self.fc = nn.Linear(hidden_size, target_size)
 
-    def forward(self, inputs, targets):
-        """
-        task1:
-            feeding the input to the encoder,
-        task2:
-            take the last_hidden_state's <CLS> token as output of the
-            encoder, feed it to a drop_out layer with the preset dropout rate in the argparse argument,
-        task3:
-            feed the normalized output of the dropout layer to the linear head layer; return the embedding
-        """
+        # self.softmax = nn.Softmax()
+
+    def forward(self, inputs, labels):
+        out1 = self.encoder(**inputs)
+        out1 = out1.last_hidden_state[:, 0]  # Extract <CLS> token
+        out1 = self.dropout1(out1)
+        out = self.fc(out1)
+        # out = self.softmax(out)
+        return out
