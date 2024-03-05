@@ -129,7 +129,7 @@ def params():
 
     # Specify the technique type for custom.
     parser.add_argument(
-        "--technique", default = 3, type=int, help="The technique used for the custom BERT model (1-3)."
+        "--technique", default = 1, type=int, help="The technique used for the custom BERT model (1-3)."
     )
 
     args = parser.parse_args()

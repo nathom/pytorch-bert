@@ -63,7 +63,6 @@ def baseline_train(args, model, datasets, tokenizer):
             acc += tem.item()
 
             model.optimizer.step()  # backprop to update the weights
-            model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
         acc /= len(datasets['train'])
@@ -85,7 +84,7 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
     epochs = args.n_epochs
     train_dataloader = get_dataloader(args, datasets["train"], split="train")
 
-    # Technique 2 uses the learning rate decay (LLRD)
+    # Technique 2 uses the learning rate decay (LLRD).
     if technique == 3 or technique == 2: optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
     else: optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     total_steps = len(train_dataloader) * epochs
@@ -118,6 +117,9 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             loss.backward()
 
             model.optimizer.step()  # backprop to update the weights
+
+            tem = (logits.argmax(1) == labels).float().sum()
+            acc += tem.item()
 
             # Technique 1 uses the schdeuler.
             if technique == 3 or technique == 1: model.scheduler.step()  # Update learning rate schedule
