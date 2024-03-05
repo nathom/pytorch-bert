@@ -101,13 +101,13 @@ def params():
     )
     parser.add_argument(
         "--n-epochs",
-        default=1,
+        default=10,
         type=int,
         help="Total number of training epochs to perform.",
     )
     parser.add_argument(
         "--n-epochs-first",
-        default=1,
+        default=5,
         type=int,
         help="Total number of training epochs first.",
     )
