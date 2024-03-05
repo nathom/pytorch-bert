@@ -103,7 +103,6 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
     train_acc_pts, train_loss_pts = [], []
     valid_acc_pts, valid_loss_pts = [], []
 
-    # task3: write a training loop
     for epoch_count in range(args.n_epochs):
         acc, losses = 0, 0
         model.train()
