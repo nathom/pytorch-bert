@@ -107,7 +107,7 @@ def params():
     )
     parser.add_argument(
         "--n-epochs-first",
-        default=5,
+        default=10,
         type=int,
         help="Total number of training epochs first.",
     )
@@ -129,7 +129,10 @@ def params():
 
     # Specify the technique type for custom.
     parser.add_argument(
-        "--technique", default = 3, type=int, help="The technique used for the custom BERT model (1-3)."
+        "--technique",
+        default=3,
+        type=int,
+        help="The technique used for the custom BERT model (1-3).",
     )
 
     args = parser.parse_args()

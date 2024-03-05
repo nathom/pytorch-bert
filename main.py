@@ -13,7 +13,7 @@ from dataloader import (
 )
 from load import load_data, load_tokenizer
 from model import CustomModel, IntentModel, SupConModel
-from utils import check_directories, set_seed, setup_gpus, plot_stuff, compare_and_save
+from utils import check_directories, compare_and_save, plot_stuff, set_seed, setup_gpus
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -66,7 +66,7 @@ def baseline_train(args, model, datasets, tokenizer):
             model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
-        acc /= len(datasets['train'])
+        acc /= len(datasets["train"])
         train_acc_pts.append(acc)
         train_loss_pts.append(losses)
 
@@ -75,7 +75,7 @@ def baseline_train(args, model, datasets, tokenizer):
         valid_loss_pts.append(outs[1])
 
         print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)
-    
+
     plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
     plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
@@ -117,10 +117,11 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             loss.backward()
 
             model.optimizer.step()  # backprop to update the weights
-            if technique == 3 or technique == 1: model.scheduler.step()  # Update learning rate schedule
+            if technique == 3 or technique == 1:
+                model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
-        acc /= len(datasets['train'])
+        acc /= len(datasets["train"])
         train_acc_pts.append(acc)
         train_loss_pts.append(losses)
 
@@ -129,7 +130,7 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
         valid_loss_pts.append(outs[1])
 
         print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)
-    
+
     plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
     plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
