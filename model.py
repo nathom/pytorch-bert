@@ -70,17 +70,13 @@ class CustomModel(nn.Module):
 
         self.dropout = nn.Dropout(p=0.1)  # Some random value I put
         self.fc = nn.Linear(self.encoder.config.hidden_size, target_size)
-        # self.softmax = nn.Softmax()
 
     def forward(self, inputs, labels):
         out = self.encoder(**inputs)
         out = out.last_hidden_state[:, 0]  # Extract <CLS> token
         out = self.dropout(out)
         out = self.fc(out)
-        # out = self.softmax(out)
         return out
-
-        # task1: use initialization for setting different strategies/techniques to better fine-tune the BERT model
 
 
 class SupConModel(nn.Module):

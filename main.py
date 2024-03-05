@@ -13,7 +13,7 @@ from dataloader import (
 )
 from load import load_data, load_tokenizer
 from model import CustomModel, IntentModel, SupConModel
-from utils import check_directories, set_seed, setup_gpus, plot_stuff, compare_and_save
+from utils import check_directories, compare_and_save, plot_stuff, set_seed, setup_gpus
 
 if torch.backends.mps.is_available():
     device = torch.device("mps")
@@ -65,7 +65,7 @@ def baseline_train(args, model, datasets, tokenizer):
             model.optimizer.step()  # backprop to update the weights
             losses += loss.item()
 
-        acc /= len(datasets['train'])
+        acc /= len(datasets["train"])
         train_acc_pts.append(acc)
         train_loss_pts.append(losses)
 
@@ -74,7 +74,7 @@ def baseline_train(args, model, datasets, tokenizer):
         valid_loss_pts.append(outs[1])
 
         print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)
-    
+
     plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
     plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
@@ -87,16 +87,17 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
     # Technique 2 uses the learning rate decay (LLRD).
     if technique == 3 or technique == 2:
         optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+        
+        total_steps = len(train_dataloader) * epochs
+        scheduler = get_linear_schedule_with_warmup(
+            optimizer,
+            num_warmup_steps=int(0.1 * total_steps),
+            num_training_steps=total_steps,
+        )
+        model.scheduler = scheduler
     else:
         optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
-    total_steps = len(train_dataloader) * epochs
-    scheduler = get_linear_schedule_with_warmup(
-        optimizer,
-        num_warmup_steps=int(0.1 * total_steps),
-        num_training_steps=total_steps,
-    )
     model.optimizer = optimizer
-    model.scheduler = scheduler
 
     # To hold the loss of each epoch.
     train_acc_pts, train_loss_pts = [], []
@@ -119,17 +120,17 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             loss = criterion(logits, labels)
             loss.backward()
 
-            model.optimizer.step()  # backprop to update the weights
-
             tem = (logits.argmax(1) == labels).float().sum()
             acc += tem.item()
 
             # Technique 1 uses the schdeuler.
             if technique == 3 or technique == 1:
                 model.scheduler.step()  # Update learning rate schedule
+
+            model.optimizer.step()  # backprop to update the weights
             losses += loss.item()
 
-        acc /= len(datasets['train'])
+        acc /= len(datasets["train"])
         train_acc_pts.append(acc)
         train_loss_pts.append(losses)
 
@@ -138,7 +139,7 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
         valid_loss_pts.append(outs[1])
 
         print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)
-    
+
     plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
     plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
@@ -218,8 +219,13 @@ def supcon_train(args, model, datasets, tokenizer):
         num_warmup_steps=int(0.1 * total_steps),
         num_training_steps=total_steps,
     )
+
+    # To hold the loss of each epoch.
+    train_acc_pts, train_loss_pts = [], []
+    valid_acc_pts, valid_loss_pts = [], []
+
     for epoch in range(args.n_epochs):
-        losses = 0
+        acc, losses = 0, 0
         model.train()
 
         for batch in progress_bar(train_dataloader):
@@ -228,19 +234,26 @@ def supcon_train(args, model, datasets, tokenizer):
             logits = model(inputs, labels)
             loss = criterion.forward(logits, labels)
             loss.backward()
+            
+            tem = (logits.argmax(1) == labels).float().sum()
+            acc += tem.item()
 
             model.optimizer.step()  # backprop to update the weights
             model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
-        run_eval(args, model, datasets, tokenizer, split="validation")
-        print("regular epoch", epoch, "| losses:", losses)
+        acc /= len(datasets["train"])
+        train_acc_pts.append(acc)
+        train_loss_pts.append(losses)
 
-    # task1: load training split of the dataset
+        outs = run_eval(args, model, datasets, tokenizer, split="validation")
+        valid_acc_pts.append(outs[0])
+        valid_loss_pts.append(outs[1])
 
-    # task2: setup optimizer_scheduler in your model
+        print("epoch:", args.n_epochs, "| acc:", acc, "| losses:", losses)
 
-    # task3: write a training loop for SupConLoss function
+    plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
+    plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
 
 
 if __name__ == "__main__":
