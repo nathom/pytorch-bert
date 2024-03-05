@@ -1,18 +1,26 @@
 \section*{Discussion}
 
-(a) Answer the 11 questions. Answer in the following format (11 pts):
-Q1: If we do not fine-tune the model, what is your expected test accuracy? Why? A1 : <Fill in Answer>
-(b) Feel free to include any other points that need to be discussed.
 \begin{enumerate}
-  \item If we do not fine-tune the model, what is your expected test accuracy? Explain Why.
-  \item Do results match your expectation(1 sentence)? Why or why not ? 
-  \item What could you do to further improve the performance ?
-  \item Which techniques did you choose and why?
-  \item What do you expect for the results of the individual technique vs. the two techniques combined?
-  \item Do results match your expectation(1 sentence)? Why or why not?
-  \item What could you do to further improve the performance?
-  \item Compare the SimCLR with SupContrast. What are the similarities and differences?
-  \item How does SimCSE apply dropout to achieve data augmentation for NLP tasks?
-  \item Do the results match your expectation? Why or why not? 
-  \item What could you do to further improve the performance ?
+  \item[Q1:] If we do not fine-tune the model, what is your expected test accuracy? Explain Why.
+  \item [A1:] We expect a low test accuracy. Without fine tuning, we fail to leverage the general representations of language learned by the BERT model for our specific task. BERT has the potential to perform very well on our dataset, but was not trained to do so and would be limited by its generic pre-trained representations.
+  \item [Q2:] Do results match your expectation(1 sentence)? Why or why not?
+  \item [A2:]
+  \item [Q3:] What could you do to further improve the performance?
+  \item [A3:]
+  \item [Q4:] Which techniques did you choose and why?
+  \item [A4:]
+  \item [Q5:] What do you expect for the results of the individual technique vs. the two techniques combined?
+  \item [A5:]
+  \item [Q6:] Do results match a real niggas expectation(1 sentence)? Why or why not?
+  \item [A6:]
+  \item [Q7:] What could you do to further improve the performance?
+  \item [A7:]
+  \item [Q8:] Compare the SimCLR with SupContrast. What are the similarities and differences?
+  \item [A8:] Both models utilize contrastive learning to learn semantic representations. However, the models differ in complexity and implementation and have  different applications. For example, SimCLR aims to create a simple and efficient framework for sentence embeddings. On the other hand, SupContrast takes a more robust approach of implementing contrastive learning for general-purpose tasks.
+  \item [Q9:] How does SimCSE apply dropout to achieve data augmentation for NLP tasks?
+  \item [A9:] By applying dropout, SimCSE introduces noise to the model, encouraging the model to learn more robust features. This effectively creates different perspectives of the same input sentence embedding, simulating the augmentation of data. The model then learns to maximize the similarity between augmented versions of the same embeddings while minimizing the similarity between augmented versions of different embeddings.
+  \item [Q10:] Do the results match your expectation? Why or why not?
+  \item [A10:]
+  \item [Q11:] What could you do to further improve the performance ?
+  \item [A11:]
 \end{enumerate}
