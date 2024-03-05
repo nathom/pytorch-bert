@@ -1,7 +1,7 @@
 import torch
 from torch import nn
 from tqdm import tqdm as progress_bar
-from transformers import AdamW, get_linear_schedule_with_warmup
+from transformers import get_linear_schedule_with_warmup
 
 from arguments import params
 from dataloader import (
@@ -85,8 +85,10 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
     train_dataloader = get_dataloader(args, datasets["train"], split="train")
 
     # Technique 2 uses the learning rate decay (LLRD).
-    if technique == 3 or technique == 2: optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
-    else: optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+    if technique == 3 or technique == 2:
+        optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    else:
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     total_steps = len(train_dataloader) * epochs
     scheduler = get_linear_schedule_with_warmup(
         optimizer,
@@ -109,9 +111,10 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             enumerate(train_dataloader), total=len(train_dataloader)
         ):
             inputs, labels = prepare_inputs(batch, model, device=device)
-            # inputs = {k: v.to(device) for k, v in inputs.items()}
-            # labels = labels.to(device)
-            optimizer.zero_grad()
+
+            if technique == 3 or technique == 2:
+                optimizer.zero_grad()
+
             logits = model(inputs, labels)
             loss = criterion(logits, labels)
             loss.backward()
@@ -122,7 +125,8 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             acc += tem.item()
 
             # Technique 1 uses the schdeuler.
-            if technique == 3 or technique == 1: model.scheduler.step()  # Update learning rate schedule
+            if technique == 3 or technique == 1:
+                model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
         acc /= len(datasets['train'])
@@ -176,7 +180,7 @@ def supcon_train(args, model, datasets, tokenizer):
     train_dataloader = get_dataloader(args, datasets["train"], split="train")
 
     # task2: setup model's optimizer_scheduler if you have
-    optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
     total_steps = len(train_dataloader) * epochs
     model.optimizer = optimizer
     assert args.n_epochs_first > 1
@@ -206,7 +210,7 @@ def supcon_train(args, model, datasets, tokenizer):
         param.requires_grad = False
 
     criterion = nn.CrossEntropyLoss()
-    model.optimizer = AdamW(
+    model.optimizer = torch.optim.AdamW(
         model.parameters(), lr=args.learning_rate, weight_decay=0.01
     )
     model.scheduler = get_linear_schedule_with_warmup(
