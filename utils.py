@@ -60,7 +60,10 @@ def plot_stuff(args, plots1, name1, plots2, name2, plot_type='Loss'):
     plt.xlabel("Epoch")
     plt.ylabel(plot_type)
     plt.legend()
-    plt.savefig("./writeup/plots/" + args.task + "_" + str(args.n_epochs) + "_" + plot_type + ".png")
+
+    if args.task == "custom": path = "./writeup/plots/" + args.task + f"{args.technique}_" + str(args.n_epochs) + "_" + plot_type + ".png"
+    else: path = "./writeup/plots/" + args.task + "_" + str(args.n_epochs) + "_" + plot_type + ".png"
+    plt.savefig(path)
     plt.clf()
 
 def compare_and_save(args, data):

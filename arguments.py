@@ -12,11 +12,11 @@ def params():
         help="baseline is fine-tuning bert for classification;\n\
                       tune is advanced techiques to fine-tune bert;\n\
                       constast is contrastive learning method",
+        choices=["baseline", "tune", "supcon"],
     )
-    # choices=['baseline','tune','supcon'])
     parser.add_argument(
         "--temperature",
-        default=0.7,
+        default=0.07,
         type=int,
         help="temperature parameter for contrastive loss",
     )
@@ -104,6 +104,12 @@ def params():
         default=1,
         type=int,
         help="Total number of training epochs to perform.",
+    )
+    parser.add_argument(
+        "--n-epochs-first",
+        default=1,
+        type=int,
+        help="Total number of training epochs first.",
     )
     parser.add_argument(
         "--step-size",
