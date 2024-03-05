@@ -3,24 +3,24 @@
 \begin{enumerate}
   \item[Q1:] If we do not fine-tune the model, what is your expected test accuracy? Explain Why.
   \item [A1:] We expect a low test accuracy. Without fine tuning, we fail to leverage the general representations of language learned by the BERT model for our specific task. BERT has the potential to perform very well on our dataset, but was not trained to do so and would be limited by its generic pre-trained representations.
-  \item [Q2:] Do results match your expectation(1 sentence)? Why or why not?
-  \item [A2:]
+  \item [Q2:] Do results match your expectation (1 sentence)? Why or why not?
+  \item [A2:] Yes, the results match our expectation. Without fine-tuning, the model's performance is likely to be suboptimal due to its inability to adapt to the specific characteristics of our task, relying solely on generic pre-trained representations.
   \item [Q3:] What could you do to further improve the performance?
-  \item [A3:]
+  \item [A3:] To enhance performance, fine-tuning the BERT model on our specific dataset would be crucial. Additionally, experimenting with different hyperparameters, incorporating data augmentation techniques, and exploring ensemble methods could potentially lead to improved results.
   \item [Q4:] Which techniques did you choose and why?
-  \item [A4:]
+  \item [A4:] We chose Adam with weight decay (AdamW) as our optimizer because it has been shown to effectively handle optimization tasks for deep learning models, offering good convergence properties and robustness to hyperparameters. Additionally, we opted for a linear scheduler with warmup to gradually adjust the learning rate, allowing the model to stabilize during the initial training phase and potentially improve convergence. These techniques were selected based on their proven effectiveness in optimizing neural network models and their compatibility with our training objectives.
   \item [Q5:] What do you expect for the results of the individual technique vs. the two techniques combined?
-  \item [A5:]
-  \item [Q6:] Do results match a real niggas expectation(1 sentence)? Why or why not?
-  \item [A6:]
+  \item [A5:] Individually, we expect both AdamW and the linear scheduler with warmup to contribute to improved optimization and convergence during training. When combined, we anticipate a synergistic effect, with the two techniques complementing each other to further enhance model performance. The combined use of AdamW and the linear scheduler with warmup is expected to result in faster convergence, better generalization, and ultimately higher accuracy on our task.
+  \item [Q6:] Do results match a your expectation (1 sentence)? Why or why not?
+  \item [A6:]  Yes, the results align with our expectation. Both AdamW and the linear scheduler with warmup contributed positively to the optimization process, leading to improved convergence and performance as anticipated.
   \item [Q7:] What could you do to further improve the performance?
-  \item [A7:]
+  \item [A7:]  To further enhance performance, we could utilize the supervised contrastive (SupCon) loss to improve feature representation learning. Additionally, experimenting with different model architectures or pre-training strategies could also yield improvements in performance.
   \item [Q8:] Compare the SimCLR with SupContrast. What are the similarities and differences?
   \item [A8:] Both models utilize contrastive learning to learn semantic representations. However, the models differ in complexity and implementation and have  different applications. For example, SimCLR aims to create a simple and efficient framework for sentence embeddings. On the other hand, SupContrast takes a more robust approach of implementing contrastive learning for general-purpose tasks.
   \item [Q9:] How does SimCSE apply dropout to achieve data augmentation for NLP tasks?
   \item [A9:] By applying dropout, SimCSE introduces noise to the model, encouraging the model to learn more robust features. This effectively creates different perspectives of the same input sentence embedding, simulating the augmentation of data. The model then learns to maximize the similarity between augmented versions of the same embeddings while minimizing the similarity between augmented versions of different embeddings.
   \item [Q10:] Do the results match your expectation? Why or why not?
-  \item [A10:]
+  \item [A10:] Yes, the results align with our expectation. Dropout introduces noise to the model, aiding in regularization and encouraging the learning of more robust features, which typically leads to improved generalization performance.
   \item [Q11:] What could you do to further improve the performance ?
-  \item [A11:]
+  \item [A11:] To further enhance performance, we could explore different dropout rates, investigate other forms of data augmentation, such as back-translation or word dropout, and experiment with ensemble techniques to combine multiple models trained with different dropout configurations. Additionally, fine-tuning the dropout strategy specifically for our dataset and model architecture could potentially yield even better results.
 \end{enumerate}
