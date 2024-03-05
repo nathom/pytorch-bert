@@ -177,6 +177,7 @@ def supcon_train(args, model, datasets, tokenizer):
     optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
     total_steps = len(train_dataloader) * epochs
     model.optimizer = optimizer
+    assert args.n_epochs_first > 1
     for epoch in range(args.n_epochs_first):
         losses = 0
         model.train()
@@ -219,7 +220,7 @@ def supcon_train(args, model, datasets, tokenizer):
             inputs, labels = prepare_inputs(batch, model, device=device)
             optimizer.zero_grad()
             logits = model(inputs, labels)
-            loss = criterion.forward(logits, labels, device=device)
+            loss = criterion.forward(logits, labels)
             loss.backward()
 
             model.optimizer.step()  # backprop to update the weights
