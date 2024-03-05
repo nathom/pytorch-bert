@@ -127,7 +127,7 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             acc += tem.item()
 
             if technique == 3 or technique == 2:
-                model.scheduler.step() # Update learning rate schedule
+                model.scheduler.step()  # Update learning rate schedule
 
             model.optimizer.step()  # backprop to update the weights
             losses += loss.item()
@@ -255,7 +255,7 @@ def supcon_train(args, model, datasets, tokenizer):
         valid_acc_pts.append(outs[0])
         valid_loss_pts.append(outs[1])
 
-        print("epoch:", args.n_epochs, "| acc:", acc, "| losses:", losses)
+        print("main epoch:", epoch, "| acc:", acc, "| losses:", losses)
 
     plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", "Accuracy")
     plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", "Loss")
@@ -297,4 +297,8 @@ if __name__ == "__main__":
         compare_and_save(args, [(f"technique_{args.technique}", fin)])
     elif args.task == "supcon":
         model = SupConModel(args, tokenizer, target_size=60).to(device)
+        run_eval(args, model, datasets, tokenizer, split="validation")
+        run_eval(args, model, datasets, tokenizer, split="test")
         supcon_train(args, model, datasets, tokenizer)
+        fin = run_eval(args, model, datasets, tokenizer, split="test")
+        compare_and_save(args, [(f"supcon_{args.technique}", fin)])
