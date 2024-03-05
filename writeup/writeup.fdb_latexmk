@@ -1,12 +1,12 @@
 # Fdb version 3
-["bibtex writeup"] 1709598120 "writeup.aux" "writeup.bbl" "writeup" 1709599347
+["bibtex writeup"] 1709603757 "writeup.aux" "writeup.bbl" "writeup" 1709603881
   "/usr/local/texlive/2022/texmf-dist/bibtex/bst/natbib/plainnat.bst" 1233624470 26816 ffe5423d2019860bad9f54bc402fac15 ""
   "references.bib" 1709588050 883 d1531226db77f47f505318968f3123d6 ""
-  "writeup.aux" 1709599346 1042 0fb5d8478fc9006039bd5c30a56a3d8f "pdflatex"
+  "writeup.aux" 1709603881 1377 7e1e21883f44cfdc35f4a99fc5099b76 "pdflatex"
   (generated)
   "writeup.bbl"
   "writeup.blg"
-["pdflatex"] 1709599345 "writeup.tex" "writeup.pdf" "writeup" 1709599347
+["pdflatex"] 1709603880 "writeup.tex" "writeup.pdf" "writeup" 1709603881
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/local/texlive/2022/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2022/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -117,15 +117,15 @@
   "/usr/local/texlive/2022/texmf-var/web2c/pdftex/pdflatex.fmt" 1666640824 2826447 7f367432376b39b23efa448c22174fc2 ""
   "/usr/local/texlive/2022/texmf.cnf" 1647878952 577 209b46be99c9075fd74d4c0369380e8c ""
   "neurips_2023.sty" 1709410154 11438 9d2e6c4cee8e5f896269ac4f7929cacd ""
-  "sections/abstract.tex" 1709410366 32 85cd4ca2923e770d4617d492087677e1 ""
+  "sections/abstract.tex" 1709603435 933 cf5a18b4b93962ae1353b448721cf83c ""
   "sections/contributions.tex" 1709410360 137 5f6537eb130538ce9390c9d7a079b842 ""
-  "sections/discussion.tex" 1709599345 2216 27613bc8e4843172f49ccda24ae66661 ""
+  "sections/discussion.tex" 1709603059 2216 27613bc8e4843172f49ccda24ae66661 ""
   "sections/intro.tex" 1709410372 24 20e4f994b35c9cd8a7f21dc4ba79a69e ""
   "sections/methods.tex" 1709410417 446 6f034491d0ef85a56e1bc90763775e32 ""
   "sections/related.tex" 1709588050 1948 37c58b93f3794d209ea19b0c52e699cb ""
-  "sections/results.tex" 1709588432 440 dc4c43ceee99f71c710d60db5e869b67 ""
-  "writeup.aux" 1709599346 1042 0fb5d8478fc9006039bd5c30a56a3d8f "pdflatex"
-  "writeup.bbl" 1709598121 976 5b4db44f26e928e731962aa699a9fb6b "bibtex writeup"
+  "sections/results.tex" 1709603879 1139 504facc81f8c96ab497bcf855dc05348 ""
+  "writeup.aux" 1709603881 1377 7e1e21883f44cfdc35f4a99fc5099b76 "pdflatex"
+  "writeup.bbl" 1709603757 976 5b4db44f26e928e731962aa699a9fb6b "bibtex writeup"
   "writeup.out" 0 -1 0 "pdflatex"
   "writeup.tex" 1709410555 1758 1f73af11a47b1e3088cd689f74c1793f ""
   (generated)

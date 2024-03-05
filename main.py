@@ -85,8 +85,11 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
     epochs = args.n_epochs
     train_dataloader = get_dataloader(args, datasets["train"], split="train")
 
-    # task2: setup model's optimizer_scheduler if you have
-    optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    # Technique 2 uses the learning rate decay (LLRD)
+    if technique == 3 or technique == 2:
+        optimizer = AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    else:
+        optimizer = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     total_steps = len(train_dataloader) * epochs
     scheduler = get_linear_schedule_with_warmup(
         optimizer,
@@ -119,6 +122,8 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             model.optimizer.step()  # backprop to update the weights
             if technique == 3 or technique == 1:
                 model.scheduler.step()  # Update learning rate schedule
+
+            # Technique 1 uses the schdeuler.
             losses += loss.item()
 
         acc /= len(datasets["train"])
