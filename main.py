@@ -86,8 +86,10 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
 
     # Technique 2 uses the learning rate decay (LLRD).
     if technique == 3 or technique == 2:
-        optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
-        
+        optimizer = torch.optim.AdamW(
+            model.parameters(), lr=args.learning_rate, weight_decay=0.01
+        )
+
         total_steps = len(train_dataloader) * epochs
         scheduler = get_linear_schedule_with_warmup(
             optimizer,
@@ -181,7 +183,9 @@ def supcon_train(args, model, datasets, tokenizer):
     train_dataloader = get_dataloader(args, datasets["train"], split="train")
 
     # task2: setup model's optimizer_scheduler if you have
-    optimizer = torch.optim.AdamW(model.parameters(), lr=args.learning_rate, weight_decay=0.01)
+    optimizer = torch.optim.AdamW(
+        model.parameters(), lr=args.learning_rate, weight_decay=0.01
+    )
     total_steps = len(train_dataloader) * epochs
     model.optimizer = optimizer
     assert args.n_epochs_first > 1
@@ -189,15 +193,16 @@ def supcon_train(args, model, datasets, tokenizer):
         losses = 0
         model.train()
 
-        for step, batch in progress_bar(
-            enumerate(train_dataloader), total=len(train_dataloader)
-        ):
+        for batch in progress_bar(train_dataloader):
             inputs, labels = prepare_inputs(batch, model, device=device)
             optimizer.zero_grad()
             logits1 = model(inputs, labels)
             logits2 = model(inputs, labels)
             logits = torch.cat([logits1.unsqueeze(1), logits2.unsqueeze(1)], dim=1)
-            loss = criterion.forward(logits, labels, device=device)
+            if args.simclr:
+                loss = criterion.forward(logits, device=device)
+            else:
+                loss = criterion.forward(logits, labels, device=device)
             loss.backward()
 
             model.optimizer.step()  # backprop to update the weights
@@ -234,7 +239,7 @@ def supcon_train(args, model, datasets, tokenizer):
             logits = model(inputs, labels)
             loss = criterion.forward(logits, labels)
             loss.backward()
-            
+
             tem = (logits.argmax(1) == labels).float().sum()
             acc += tem.item()
 

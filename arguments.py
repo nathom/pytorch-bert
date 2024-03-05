@@ -73,6 +73,11 @@ def params():
 
     # Hyper-parameters for tuning
     parser.add_argument(
+        "--simclr",
+        action="store_true",
+        help="Use simclr loss when doing supcon",
+    )
+    parser.add_argument(
         "--batch-size",
         default=16,
         type=int,
