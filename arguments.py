@@ -121,5 +121,10 @@ def params():
         "--max-len", default=20, type=int, help="maximum sequence length to look back"
     )
 
+    # Specify the technique type for custom.
+    parser.add_argument(
+        "--technique", default = 3, type=int, help="The technique used for the custom BERT model (1-3)."
+    )
+
     args = parser.parse_args()
     return args

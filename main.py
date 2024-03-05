@@ -77,18 +77,12 @@ def baseline_train(args, model, datasets, tokenizer):
         valid_loss_pts.append(outs[1])
         print("epoch:", epoch_count, "| acc:", acc, "| losses:", losses)    
     
-    plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", plot_type="Loss")
-    plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", plot_type="Accuracy")
+    plot_stuff(args, train_loss_pts, "Train", valid_loss_pts, "Valid", plot_type="Loss")
+    plot_stuff(args, train_acc_pts, "Train", valid_acc_pts, "Valid", plot_type="Accuracy")
 
 
 def custom_train(args, model, datasets, tokenizer):
-    criterion = nn.CrossEntropyLoss()  # combines LogSoftmax() and NLLLoss()
-    # task1: setup train dataloader
-
-    # task2: setup model's optimizer_scheduler if you have
-
-    # task3: write a training loop
-
+    pass
 
 def run_eval(args, model, datasets, tokenizer, split="validation"):
     model.eval()
@@ -158,6 +152,9 @@ if __name__ == "__main__":
         args.task == "custom"
     ):  # you can have multiple custom task for different techniques
         model = CustomModel(args, tokenizer, target_size=60).to(device)
+
+        if args.technique == 1: pass
+
         run_eval(args, model, datasets, tokenizer, split="validation")
         run_eval(args, model, datasets, tokenizer, split="test")
         custom_train(args, model, datasets, tokenizer)
