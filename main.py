@@ -63,7 +63,6 @@ def baseline_train(args, model, datasets, tokenizer):
             acc += tem.item()
 
             model.optimizer.step()  # backprop to update the weights
-            model.scheduler.step()  # Update learning rate schedule
             losses += loss.item()
 
         acc /= len(datasets["train"])
@@ -122,6 +121,9 @@ def custom_train(args, model, datasets, tokenizer, technique=1):
             model.optimizer.step()  # backprop to update the weights
             if technique == 3 or technique == 1:
                 model.scheduler.step()  # Update learning rate schedule
+
+            tem = (logits.argmax(1) == labels).float().sum()
+            acc += tem.item()
 
             # Technique 1 uses the schdeuler.
             losses += loss.item()

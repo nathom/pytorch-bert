@@ -61,7 +61,7 @@ def plot_stuff(args, plots1, name1, plots2, name2, plot_type='Loss'):
     plt.ylabel(plot_type)
     plt.legend()
 
-    if args.task == "custom": path = "./writeup/plots/" + args.task + f"{args.technique}_" + str(args.n_epochs) + "_" + plot_type + ".png"
+    if args.task == "tune": path = "./writeup/plots/" + args.task + f"{args.technique}_" + str(args.n_epochs) + "_" + plot_type + ".png"
     else: path = "./writeup/plots/" + args.task + "_" + str(args.n_epochs) + "_" + plot_type + ".png"
     plt.savefig(path)
     plt.clf()
@@ -78,5 +78,5 @@ def compare_and_save(args, data):
         save[f"{name}_loss"] = d[1]
     
     json_object = json.dumps(save, indent=4)
-    with open(f"./results/{args.task}/result.json", "w") as outfile:
+    with open(f"./results/{args.task}/result{args.technique}.json", "w") as outfile:
         outfile.write(json_object)
