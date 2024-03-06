@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.7)  5 MAR 2024 16:40
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (MiKTeX 24.1) (preloaded format=pdflatex 2024.2.7)  5 MAR 2024 16:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -592,28 +592,18 @@ Package microtype Info: Loading generic protrusion settings for font family
  (sections/abstract.tex) [1
 
 
-{C:/Users/Darren Yu/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Darren Yu/AppData/Local/Programs/MiKTeX1/fonts/enc/dvips/base/8r.enc}] (sections/intro.tex) (sections/related.tex
-
-Package natbib Warning: Citation `bert' on page 2 undefined on input line 4.
-
-
-Package natbib Warning: Citation `scl' on page 2 undefined on input line 7.
-
-
-Package natbib Warning: Citation `simcse' on page 2 undefined on input line 10.
-
-) (sections/methods.tex [2] [3] [4]) (sections/results.tex
-<./plots/baseline_10_Accuracy.png, id=25, 462.528pt x 346.896pt>
+{C:/Users/Darren Yu/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}{C:/Users/Darren Yu/AppData/Local/Programs/MiKTeX1/fonts/enc/dvips/base/8r.enc}] (sections/intro.tex) (sections/related.tex) (sections/methods.tex [2] [3] [4]) (sections/results.tex
+<./plots/baseline_10_Accuracy.png, id=34, 462.528pt x 346.896pt>
 File: ./plots/baseline_10_Accuracy.png Graphic file (type png)
 <use ./plots/baseline_10_Accuracy.png>
 Package pdftex.def Info: ./plots/baseline_10_Accuracy.png  used on input line 40.
 (pdftex.def)             Requested size: 138.75946pt x 104.0696pt.
-<./plots/tune1_10_Accuracy.png, id=27, 462.528pt x 346.896pt>
+<./plots/tune1_10_Accuracy.png, id=36, 462.528pt x 346.896pt>
 File: ./plots/tune1_10_Accuracy.png Graphic file (type png)
 <use ./plots/tune1_10_Accuracy.png>
 Package pdftex.def Info: ./plots/tune1_10_Accuracy.png  used on input line 42.
 (pdftex.def)             Requested size: 138.75946pt x 104.0696pt.
-<./plots/tune2_10_Accuracy.png, id=28, 462.528pt x 346.896pt>
+<./plots/tune2_10_Accuracy.png, id=37, 462.528pt x 346.896pt>
 File: ./plots/tune2_10_Accuracy.png Graphic file (type png)
 <use ./plots/tune2_10_Accuracy.png>
 Package pdftex.def Info: ./plots/tune2_10_Accuracy.png  used on input line 44.
@@ -623,12 +613,12 @@ Overfull \hbox (26.2934pt too wide) in paragraph at lines 40--45
  [][][][] 
  []
 
-<./plots/supcon_10_Accuracy.png, id=29, 462.528pt x 346.896pt>
+<./plots/supcon_10_Accuracy.png, id=38, 462.528pt x 346.896pt>
 File: ./plots/supcon_10_Accuracy.png Graphic file (type png)
 <use ./plots/supcon_10_Accuracy.png>
 Package pdftex.def Info: ./plots/supcon_10_Accuracy.png  used on input line 50.
 (pdftex.def)             Requested size: 138.75946pt x 104.0696pt.
-<./plots/supcon_sim_10_Accuracy.png, id=30, 462.528pt x 346.896pt>
+<./plots/supcon_sim_10_Accuracy.png, id=39, 462.528pt x 346.896pt>
 File: ./plots/supcon_sim_10_Accuracy.png Graphic file (type png)
 <use ./plots/supcon_sim_10_Accuracy.png>
 Package pdftex.def Info: ./plots/supcon_sim_10_Accuracy.png  used on input line 52.
@@ -636,11 +626,7 @@ Package pdftex.def Info: ./plots/supcon_sim_10_Accuracy.png  used on input line 
 )
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [5 <./plots/baseline_10_Accuracy.png> <./plots/tune1_10_Accuracy.png> <./plots/tune2_10_Accuracy.png>] (sections/discussion.tex [6 <./plots/supcon_10_Accuracy.png> <./plots/supcon_sim_10_Accuracy.png>]) (sections/contributions.tex) (writeup.bbl)
-
-Package natbib Warning: There were undefined citations.
-
-[7] (writeup.aux)
+ [5 <./plots/baseline_10_Accuracy.png> <./plots/tune1_10_Accuracy.png> <./plots/tune2_10_Accuracy.png>] (sections/discussion.tex [6 <./plots/supcon_10_Accuracy.png> <./plots/supcon_sim_10_Accuracy.png>]) (sections/contributions.tex) (writeup.bbl) [7] (writeup.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -649,17 +635,17 @@ Package rerunfilecheck Info: File `writeup.out' has not changed.
 (rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
  ) 
 Here is how much of TeX's memory you used:
- 17640 strings out of 474486
- 300434 string characters out of 5741363
+ 17652 strings out of 474486
+ 300626 string characters out of 5741363
  1937542 words of memory out of 5000000
- 39488 multiletter control sequences out of 15000+600000
- 587357 words of font info for 165 fonts, out of 8000000 for 9000
+ 39500 multiletter control sequences out of 15000+600000
+ 587233 words of font info for 163 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,8n,79p,1251b,635s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\Darren Yu\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1000.pk><C:/Users/Darren Yu/AppData/Local/Programs/MiKTeX1/fonts/type1/urw/times/utmb8a.pfb><C:/Users/Darren Yu/AppData/Local/Programs/MiKTeX1/fonts/type1/urw/times/utmr8a.pfb><C:/Users/Darren Yu/AppData/Local/Programs/MiKTeX1/fonts/type1/urw/times/utmri8a.pfb>
-Output written on writeup.pdf (7 pages, 186426 bytes).
+Output written on writeup.pdf (7 pages, 188264 bytes).
 PDF statistics:
- 113 PDF objects out of 1000 (max. 8388607)
- 12 named destinations out of 1000 (max. 500000)
+ 123 PDF objects out of 1000 (max. 8388607)
+ 15 named destinations out of 1000 (max. 500000)
  30746 words of extra memory for PDF output out of 35830 (max. 10000000)
 
