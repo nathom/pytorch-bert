@@ -1,15 +1,13 @@
 \section*{Methods}
 
-(a) It has at least 3 subsections for baseline/custom/contrastive learning. Each of the subsection should start with the final experimental settings you decide that we do not specify, including parameters of the library functions (except for defaults), hyperparameters you choose etc. These experimental setting should correspond to your best results.
+\subsection*{1. Baseline}
 
-\subsection*{Baseline}
-
-\subsubsection*{Model Architecture}
+\subsection*{Model Architecture}
 Our intent classification model is built upon the transformer architecture, utilizing the BERT (\textit{bert-base-uncased}) model as the encoder for input text representation. Specifically, our model, named \texttt{IntentModel}, leverages a pre-trained BERT model to encode textual inputs into a contextualized embedding space. The architecture is designed to be flexible, allowing for easy adaptation to different target sizes, which corresponds to the number of intent categories in the classification task.
 
 The model is initialized with a tokenizer responsible for converting text inputs into token embeddings, which are then passed through the BERT encoder. The encoder output, specifically the representation of the [CLS] token, is subsequently processed through a dropout layer with a predefined probability (0.1 in this implementation) to mitigate overfitting.
 
-\subsubsection*{Classifier}
+\subsection*{Classifier}
 Following the dropout layer, the model employs a classification layer, named \texttt{Classifier}, to project the encoded representations into the target label space. The \texttt{Classifier} consists of a linear layer that maps the input dimension to an intermediate representation, followed by a ReLU activation function for non-linearity, and another linear layer that maps the intermediate representation to the target size, corresponding to the number of intent categories.
 
 \subsubsection*{Training Procedure}
@@ -25,7 +23,7 @@ Model evaluation is conducted on a held-out test set or a validation set during 
 This intent classification framework demonstrates a straightforward application of transfer learning and fine-tuning BERT for a specific NLP task. By leveraging pre-trained models and adapting them to target tasks, we can achieve high performance with relatively minimal additional training.
 
 
-\subsection*{Custom}
+\subsection*{2. Custom Fine-tune}
 
 \subsubsection*{Training}
 
@@ -64,7 +62,7 @@ Custom model evaluation is analogous to the base model, emphasizing the model's 
 \textbf{Note:} The custom model retains the architectural foundation of the \texttt{IntentModel}, with these techniques offering strategic adjustments to the training algorithm rather than altering the model structure.
 
 
-\subsection*{Supervised Contrastive Learning Model}
+\subsection*{3. Supervised Contrastive Learning Model}
 
 The \texttt{SupConModel} represents a novel approach to intent classification by incorporating supervised contrastive learning, a technique that enhances model performance by learning representations that bring similar samples closer and push dissimilar ones apart in the embedding space.
 

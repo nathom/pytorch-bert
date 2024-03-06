@@ -5,7 +5,6 @@ def load_data():
     from datasets import load_dataset
 
     dataset = load_dataset("mteb/amazon_massive_intent")
-    print(dataset)
     return dataset
 
 

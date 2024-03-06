@@ -1,8 +1,8 @@
 \section*{Results}
 
-Summarize and document the results for all experiments (Baseline Model, Custom Finetuning Strategies, SupContrast and SimCLR).
+\subsection*{Experiment Loss and Accuracy}
 
-(a) Include the table(s) (for the 6 experiments as indicated above with “exp idx”)
+Here are the test loss and accuracy of each experiment.
 
 \begin{table}[H]
     \centering
@@ -10,19 +10,19 @@ Summarize and document the results for all experiments (Baseline Model, Custom F
         \hline
         Exp. Index & Experiment & Loss & Accuracy \\
         \hline
-        1 & Test set before fine-tuning    && \\
+        1 & Test set before fine-tuning    & 765.904 & 0.009751 \\
         \hline
-        2 & Test set after fine-tuning     && \\
+        2 & Test set after fine-tuning     & 167.609 & 0.858439 \\
         \hline
-        3 & Test set with first technique  && \\
+        3 & Test set with first technique  & 134.134 & 0.876086 \\
         \hline
-        4 & Test set with second technique && \\
+        4 & Test set with second technique & 122.907 & 0.885339 \\
         \hline
-        5 & Test set with two techniques   && \\
+        5 & Test set with two techniques   & 123.766 & 0.886012 \\
         \hline
-        6 & Test set with SupContrast      && \\
+        6 & Test set with SupContrast      & 33.681 & 0.879623 \\
         \hline
-        7 & Test set with SimCLR           && \\
+        7 & Test set with SimCLR           & 46.681 & 0.868623 \\
         \hline
     \end{tabular}
     \vspace{2mm}
@@ -30,14 +30,24 @@ Summarize and document the results for all experiments (Baseline Model, Custom F
     \label{tab:exp}
 \end{table}
 
-(b) Provide your training and validation accuracy in each plot for the following 5 models
+\subsection*{Accuracy Plots}
 
-i. Baseline model
+Here are the accuracy plot of the 5 models.
 
-ii. first fine-tuning technique
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering Basline Accuracy]
+    {{\includegraphics[scale=0.3]{./plots/baseline_10_Accuracy.png} }}
+    \subfloat[\centering Technique One Accuracy]
+    {{\includegraphics[scale=0.3]{./plots/tune1_10_Accuracy.png} }}
+    \subfloat[\centering Technique Two Accuracy]
+    {{\includegraphics[scale=0.3]{./plots/tune2_10_Accuracy.png} }}
+\end{figure}
 
-iii. second fine-tuning technique 
-
-iv. SupContrast
-
-v. SimCLR
+\begin{figure}[H]
+    \centering
+    \subfloat[\centering SupContrast]
+    {{\includegraphics[scale=0.3]{./plots/supcon_10_Accuracy.png} }}
+    \subfloat[\centering SimCLR]
+    {{\includegraphics[scale=0.3]{./plots/supcon_sim_10_Accuracy.png} }}
+\end{figure}

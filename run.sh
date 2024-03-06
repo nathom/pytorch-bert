@@ -9,4 +9,5 @@ python main.py --n-epochs 10 --do-train --task tune --technique 3
 python main.py --n-epochs 10 --do-train --task supcon --simclr --batch-size 64
 
 # Nathan
+python main.py --n-epochs 10 --do-train
 python main.py --n-epochs 10 --do-train --task supcon --batch-size 64
